@@ -1,0 +1,50 @@
+const lightsData = [
+    { id: 1, lux: 1200, status: 'off', fault: false, powerConsumption: 30 },
+    { id: 2, lux: 800, status: 'on', fault: true, powerConsumption: 25 },
+];
+/* above values are static, take the input as dynamic data from server */
+
+function renderLightsTable() {
+    const lightsSection = document.getElementById('lights-section');
+    lightsSection.innerHTML = ''; // Clear existing content
+
+    const table = document.createElement('table');
+    table.innerHTML = `
+        <tr>
+            <th>ID</th>
+            <th>Lux</th>
+            <th>Status</th>
+            <th>Fault</th>
+            <th>Power Consumption (W)</th>
+            <th>Action</th>
+        </tr>
+    `;
+    lightsData.forEach(light => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${light.id}</td>
+            <td>${light.lux}</td>
+            <td>${light.status}</td>
+            <td>${light.fault ? 'Yes' : 'No'}</td>
+            <td>${light.powerConsumption}</td>
+            <td><button onclick="toggleLight(${light.id})">${light.status === 'on' ? 'Turn Off' : 'Turn On'}</button></td>
+        `;
+        if (light.fault) {
+            row.style.backgroundColor = 'red'; // Highlight in red if there's a fault
+        }
+        table.appendChild(row);
+    });
+    lightsSection.appendChild(table);
+}
+
+function toggleLight(lightId) {
+    const lightIndex = lightsData.findIndex(light => light.id === lightId);
+
+    if (lightIndex !== -1) {
+        lightsData[lightIndex].status = lightsData[lightIndex].status === 'on' ? 'off' : 'on';
+        renderLightsTable(); // Re-render the lights table after toggling
+    }
+}
+
+// Initial render
+renderLightsTable();
